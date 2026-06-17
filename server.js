@@ -2,6 +2,10 @@ require('dotenv').config();
 const express = require('express');
 const Anthropic = require('@anthropic-ai/sdk');
 const path = require('path');
+const fs = require('fs');
+
+const SESSIONS_DIR = path.join(__dirname, 'sessions');
+if (!fs.existsSync(SESSIONS_DIR)) fs.mkdirSync(SESSIONS_DIR);
 
 const app = express();
 app.use(express.json({ limit: '2mb' }));
@@ -246,6 +250,27 @@ ${buildMarketingText(marketing)}
       throw new Error('שגיאה בפענוח התשובה — נסי שוב עם פחות תוכן שיווקי');
     }
     res.json({ success: true, analysis });
+
+    // Save session to local file (not exposed via any route)
+    try {
+      const now = new Date();
+      const dateStr = now.toISOString().slice(0, 10);
+      const timeStr = now.toTimeString().slice(0, 5).replace(':', '-');
+      const safeName = (businessName || 'ללא-שם').replace(/[<>:"/\\|?*]/g, '').trim().replace(/\s+/g, '-').slice(0, 40) || 'session';
+      const filename = `${dateStr}_${timeStr}_${safeName}.json`;
+      const session = {
+        timestamp: now.toISOString(),
+        businessName: businessName || '',
+        businessDomain: businessDomain || '',
+        icp,
+        marketing,
+        analysis
+      };
+      fs.writeFileSync(path.join(SESSIONS_DIR, filename), JSON.stringify(session, null, 2), 'utf8');
+      console.log(`[session saved] ${filename}`);
+    } catch (saveErr) {
+      console.error('[session save error]', saveErr.message);
+    }
   } catch (err) {
     console.error('[analyze error]', err.message);
     res.status(500).json({ error: err.message });

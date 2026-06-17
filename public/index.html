@@ -138,20 +138,27 @@
     .url-row { display: flex; gap: 0.5rem; }
     .url-row input { flex: 1; direction: ltr; text-align: left; }
     .btn-fetch {
-      padding: 0.6rem 1rem;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
+      padding: 0.6rem 1.1rem;
+      background: var(--gold);
+      border: 1px solid var(--gold);
       border-radius: 6px;
-      color: var(--text-muted);
+      color: #fff;
       font-family: inherit;
       font-size: 0.78rem;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
       white-space: nowrap;
       transition: all 0.15s;
       flex-shrink: 0;
     }
-    .btn-fetch:hover { border-color: var(--gold-border); color: var(--gold); }
+    .btn-fetch:hover { opacity: 0.85; }
+    .btn-fetch.secondary {
+      background: var(--surface-2);
+      border-color: var(--border);
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .btn-fetch.secondary:hover { border-color: var(--gold-border); color: var(--gold); background: var(--surface-2); opacity: 1; }
     .fetch-msg { font-size: 0.74rem; color: var(--text-muted); margin-top: 0.3rem; }
     .fetch-msg.ok { color: var(--green); }
     .fetch-msg.err { color: var(--orange); }
@@ -735,7 +742,7 @@
           <label>דף פייסבוק — פתח ספריית מודעות</label>
           <div class="url-row">
             <input type="url" id="fb_page_url" placeholder="https://www.facebook.com/שם-הדף" dir="ltr">
-            <button class="btn-fetch" onclick="openFbAdsLibrary()">פתח</button>
+            <button class="btn-fetch secondary" onclick="openFbAdsLibrary()">פתח</button>
           </div>
           <span class="paste-hint" style="margin-top:0.3rem;display:block">יפתח טאב עם המודעות הפעילות — העתיקי ידנית לתיבה למטה</span>
         </div>
@@ -1262,6 +1269,9 @@
   // Allow Enter in URL field to trigger fetch
   document.getElementById('website_url').addEventListener('keydown', e => {
     if (e.key === 'Enter') { e.preventDefault(); fetchWebsite(); }
+  });
+  document.getElementById('salespage_url').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); fetchSalesPage(); }
   });
 </script>
 </body>
