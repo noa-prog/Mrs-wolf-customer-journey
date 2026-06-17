@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mrs. Wolf — בוחן יישור שיווק</title>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --surface: #f7f7f7;
+      --surface-2: #efefef;
+      --surface-3: #e8e8e8;
+      --border: #e0e0e0;
+      --border-hover: #bbb;
+      --gold: #e85c52;
+      --gold-dim: rgba(232, 92, 82, 0.08);
+      --gold-border: rgba(232, 92, 82, 0.25);
+      --text: #1a1a1a;
+      --text-muted: #888;
+      --text-dim: #bbb;
+      --red: #d94444;
+      --orange: #d47a25;
+      --yellow: #b89e10;
+      --green: #3a9458;
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Heebo', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2.5rem 1rem 4rem;
+      line-height: 1.5;
+    }
+
+    .container { max-width: 840px; margin: 0 auto; }
+
+    /* ─── Header ─────────────────────────────── */
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 3rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo-wrap {
+      display: inline-flex;
+      align-items: center;
+    }
+    .site-logo { height: 42px; display: block; }
+    .brand-sub { font-size: 0.8rem; color: var(--text-muted); font-weight: 400; margin-top: 6px; }
+    .header-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.3rem 0.85rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* ─── Cards ──────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .card-header {
+      padding: 0.9rem 1.5rem;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .step-badge {
+      width: 22px; height: 22px;
+      background: var(--gold-dim);
+      border: 1px solid var(--gold-border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; font-weight: 700; color: var(--gold);
+      flex-shrink: 0;
+    }
+    .card-title { font-size: 0.88rem; font-weight: 600; }
+    .card-body { padding: 1.5rem; display: grid; gap: 1.25rem; }
+
+    /* ─── Fields ─────────────────────────────── */
+    .field { display: grid; gap: 0.4rem; }
+    .grid-2 { grid-template-columns: 1fr 1fr; gap: 1rem; display: grid; }
+    .grid-2-3 { grid-template-columns: 2fr 1fr; gap: 1rem; display: grid; }
+
+    label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .label-hint {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      display: block;
+      margin-top: 1px;
+    }
+
+    input[type="text"],
+    input[type="url"],
+    textarea {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.88rem;
+      padding: 0.6rem 0.9rem;
+      width: 100%;
+      transition: border-color 0.15s;
+      resize: vertical;
+      line-height: 1.5;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--gold-border);
+      background: #fdf8f8;
+    }
+    textarea { min-height: 80px; }
+    textarea.short { min-height: 60px; }
+    textarea.tall { min-height: 110px; }
+
+    /* ─── URL row ────────────────────────────── */
+    .url-row { display: flex; gap: 0.5rem; }
+    .url-row input { flex: 1; direction: ltr; text-align: left; }
+    .btn-fetch {
+      padding: 0.6rem 1rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .btn-fetch:hover { border-color: var(--gold-border); color: var(--gold); }
+    .fetch-msg { font-size: 0.74rem; color: var(--text-muted); margin-top: 0.3rem; }
+    .fetch-msg.ok { color: var(--green); }
+    .fetch-msg.err { color: var(--orange); }
+
+    /* ─── Social hint ────────────────────────── */
+    .paste-hint {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      margin-bottom: 0.4rem;
+      display: block;
+    }
+
+    /* ─── Divider ────────────────────────────── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0.25rem 0;
+    }
+
+    /* ─── Marketing subsection titles ──────── */
+    .msub-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 0.6rem;
+    }
+
+    /* ─── Language compare ───────────────────── */
+    .lang-compare-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .lang-compare-header {
+      padding: 0.75rem 1.25rem;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.6px;
+      color: var(--text-muted);
+    }
+    .lang-compare-table { width: 100%; border-collapse: collapse; }
+    .lang-compare-table th {
+      padding: 0.6rem 1.25rem;
+      font-size: 0.72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border);
+      text-align: right;
+    }
+    .lang-compare-table th:first-child { color: var(--red); }
+    .lang-compare-table th:last-child { color: var(--green); border-right: 1px solid var(--border); }
+    .lang-compare-table td {
+      padding: 0.7rem 1.25rem;
+      font-size: 0.83rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.45;
+    }
+    .lang-compare-table td:last-child { border-right: 1px solid var(--border); }
+    .lang-compare-table tr:last-child td { border-bottom: none; }
+
+    /* ─── Print summary ──────────────────────── */
+    .summary-page { display: none; }
+
+    @media print {
+      .container { display: none !important; }
+      .summary-page { display: block !important; font-family: 'Heebo', sans-serif; padding: 2rem; color: #1a1a1a; direction: rtl; }
+      .sp-logo { height: 36px; margin-bottom: 1rem; }
+      .sp-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #e85c52; padding-bottom: 0.75rem; margin-bottom: 1.5rem; }
+      .sp-business { font-size: 1.1rem; font-weight: 700; }
+      .sp-date { font-size: 0.75rem; color: #888; }
+      .sp-score-row { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; }
+      .sp-score-circle { width: 72px; height: 72px; border-radius: 50%; border: 3px solid #e85c52; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+      .sp-score-num { font-size: 1.6rem; font-weight: 800; color: #e85c52; line-height: 1; }
+      .sp-score-sub { font-size: 0.65rem; color: #888; }
+      .sp-score-label { font-size: 0.88rem; }
+      .sp-icp { background: #fff5f4; border: 1px solid rgba(232,92,82,0.2); border-radius: 8px; padding: 0.9rem 1.1rem; margin-bottom: 1.5rem; font-size: 0.84rem; line-height: 1.6; }
+      .sp-section-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #e85c52; margin-bottom: 0.5rem; margin-top: 1.25rem; }
+      .sp-list { list-style: none; display: grid; gap: 0.4rem; }
+      .sp-list li { font-size: 0.82rem; padding-right: 1rem; position: relative; line-height: 1.4; }
+      .sp-list li::before { position: absolute; right: 0; font-weight: 700; }
+      .sp-gaps li::before { content: "✕"; color: #d94444; }
+      .sp-recs li { padding-right: 1.4rem; }
+      .sp-recs li::before { content: attr(data-num); color: #e85c52; font-size: 0.75rem; }
+      .sp-rec-title { font-weight: 600; }
+      .sp-rec-action { color: #555; }
+      .sp-footer { margin-top: 2rem; padding-top: 0.75rem; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+      .sp-footer-brand { font-size: 0.9rem; font-weight: 800; color: #e85c52; }
+      .sp-footer-tag { font-size: 0.7rem; color: #aaa; }
+    }
+
+    /* ─── Analyze button ─────────────────────── */
+    .analyze-wrap { text-align: center; margin: 2.5rem 0 1.5rem; }
+    .btn-analyze {
+      background: var(--gold);
+      color: #0a0a0a;
+      border: none;
+      border-radius: 8px;
+      padding: 1rem 3.5rem;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .btn-analyze:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-analyze:active { transform: translateY(0); }
+    .btn-analyze:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    /* ─── Error ──────────────────────────────── */
+    .error-box {
+      background: rgba(217, 85, 85, 0.06);
+      border: 1px solid rgba(217, 85, 85, 0.2);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      color: var(--red);
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    /* ─── Loading ────────────────────────────── */
+    .loading {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-muted);
+    }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 2px solid var(--border);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+      margin: 0 auto 1.25rem;
+    }
+    .loading-label { font-size: 0.85rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── Hidden ─────────────────────────────── */
+    .hidden { display: none !important; }
+
+    /* ════════════════════════════════════════════
+       RESULTS
+    ════════════════════════════════════════════ */
+
+    /* Audit header */
+    .audit-header {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .audit-brand-block {}
+    .audit-brand { font-size: 1.1rem; font-weight: 800; color: var(--gold); }
+    .audit-subtitle { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px; }
+    .audit-meta { text-align: left; }
+    .audit-business { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+    .audit-date { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; direction: ltr; }
+
+    /* ICP summary */
+    .result-icp {
+      background: var(--gold-dim);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .result-icp-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 0.5rem;
+    }
+    .result-icp-text { font-size: 0.88rem; line-height: 1.65; }
+
+    /* Score hero */
+    .score-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 2rem 0;
+    }
+    .score-visual { position: relative; display: inline-flex; }
+    .score-svg { display: block; }
+    .score-track { transition: none; }
+    .score-ring {
+      stroke-dasharray: 364.42;
+      stroke-dashoffset: 364.42;
+      transform: rotate(-90deg);
+      transform-origin: 70px 70px;
+      transition: stroke-dashoffset 1.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  stroke 0.3s ease;
+    }
+    .score-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .score-num {
+      font-size: 2.6rem;
+      font-weight: 800;
+      line-height: 1;
+      transition: color 0.4s ease;
+    }
+    .score-denom { font-size: 0.72rem; color: var(--text-muted); }
+    .score-label-text { font-size: 0.85rem; color: var(--text-muted); text-align: center; max-width: 340px; }
+
+    /* Critical gap */
+    .critical-gap-block {
+      border: 1px solid rgba(217, 85, 85, 0.2);
+      background: rgba(217, 85, 85, 0.04);
+      border-radius: var(--radius);
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      gap: 0.9rem;
+      align-items: flex-start;
+    }
+    .critical-gap-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+    .critical-gap-label { font-size: 0.68rem; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 0.3rem; }
+    .critical-gap-text { font-size: 0.88rem; line-height: 1.55; }
+
+    /* Slogan analysis */
+    .slogan-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .slogan-header {
+      padding: 0.75rem 1.25rem;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .slogan-header-label { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; }
+    .slogan-score-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+    }
+    .slogan-body { padding: 1.25rem; display: grid; gap: 0.75rem; }
+    .slogan-quote {
+      font-size: 0.95rem;
+      font-style: italic;
+      color: var(--text-muted);
+      padding-right: 1rem;
+      border-right: 2px solid var(--border);
+    }
+    .slogan-verdict { font-size: 0.85rem; line-height: 1.55; }
+    .slogan-gap { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+    .slogan-gap strong { color: var(--text); }
+
+    /* Dimensions */
+    .dimensions-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .dimensions-header {
+      padding: 0.75rem 1.25rem;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .dim-item {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .dim-item:last-child { border-bottom: none; }
+    .dim-top { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.45rem; }
+    .dim-name { font-size: 0.85rem; font-weight: 600; flex: 1; }
+    .dim-score-val { font-size: 0.82rem; font-weight: 700; min-width: 38px; text-align: left; }
+    .dim-bar-track { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 0.5rem; }
+    .dim-bar-fill { height: 100%; border-radius: 2px; transition: width 0.9s cubic-bezier(0.4, 0, 0.2, 1); width: 0; }
+    .dim-finding { font-size: 0.79rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* Two col */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+    .result-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .rc-header {
+      padding: 0.7rem 1.25rem;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .strengths-card .rc-header { color: var(--green); }
+    .gaps-card .rc-header { color: var(--red); }
+    .rc-list { list-style: none; padding: 1rem 1.25rem; display: grid; gap: 0.65rem; }
+    .rc-list li {
+      font-size: 0.82rem;
+      line-height: 1.45;
+      padding-right: 1.2rem;
+      position: relative;
+    }
+    .rc-list li::before {
+      position: absolute; right: 0;
+      font-size: 0.7rem; font-weight: 700;
+      top: 2px;
+    }
+    .strengths-card .rc-list li::before { content: "✓"; color: var(--green); }
+    .gaps-card .rc-list li::before { content: "✕"; color: var(--red); }
+
+    /* Recommendations */
+    .recs-block { margin-bottom: 2rem; }
+    .recs-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .rec-list { display: grid; gap: 0.75rem; }
+    .rec-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      transition: border-color 0.15s;
+    }
+    .rec-item:hover { border-color: var(--gold-border); }
+    .rec-num {
+      width: 26px; height: 26px;
+      background: var(--gold-dim);
+      border: 1px solid var(--gold-border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 800; color: var(--gold);
+      flex-shrink: 0;
+    }
+    .rec-content {}
+    .rec-title { font-size: 0.88rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .rec-action { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* Print button */
+    .print-wrap { text-align: center; padding-top: 1rem; }
+    .btn-print {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 6px;
+      padding: 0.6rem 1.5rem;
+      font-family: inherit;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-print:hover { border-color: var(--border-hover); color: var(--text); }
+
+    /* ─── Score colors ────────────────────────── */
+    .c-red { color: var(--red) !important; }
+    .c-orange { color: var(--orange) !important; }
+    .c-yellow { color: var(--yellow) !important; }
+    .c-green { color: var(--green) !important; }
+    .bg-red { background: var(--red) !important; }
+    .bg-orange { background: var(--orange) !important; }
+    .bg-yellow { background: var(--yellow) !important; }
+    .bg-green { background: var(--green) !important; }
+
+    /* ─── Responsive ─────────────────────────── */
+    @media (max-width: 600px) {
+      .grid-2, .grid-2-3 { grid-template-columns: 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+      .audit-header { flex-direction: column; gap: 0.5rem; }
+      .audit-meta { text-align: right; }
+    }
+
+    /* ─── Print ──────────────────────────────── */
+    @media print {
+      .container { display: none !important; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header class="site-header">
+    <div>
+      <div class="logo-wrap">
+        <img src="logo.png" alt="Mrs. Wolf" class="site-logo">
+      </div>
+      <div class="brand-sub">האם המדיה שלך מדברת לקהל הנכון?</div>
+    </div>
+    <div class="header-tag">Internal Use</div>
+  </header>
+
+  <!-- ═══════════════════════════════════
+       FORM
+  ════════════════════════════════════ -->
+  <div id="form-section">
+
+    <!-- Business info -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-badge">0</div>
+        <div class="card-title">פרטי הלקוח</div>
+      </div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div class="field">
+            <label>שם העסק</label>
+            <input type="text" id="businessName" placeholder="לדוגמה: סטודיו X...">
+          </div>
+          <div class="field">
+            <label>תחום</label>
+            <input type="text" id="businessDomain" placeholder="לדוגמה: הכשרה מקצועית, קליניקה...">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ICP -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-badge">1</div>
+        <div class="card-title">מיפוי הלקוח האידיאלי</div>
+      </div>
+      <div class="card-body">
+
+        <div class="field">
+          <label>מי הוא?
+            <span class="label-hint">תפקיד, גיל, שלב בחיים / בעסק</span>
+          </label>
+          <textarea class="tall" id="icp_who" placeholder="לדוגמה: אשת עסקים 35-50, בעלת קליניקה פרטית עם 5+ שנות ניסיון. כבר יש לה לקוחות, כבר יש לה שם — אבל עדיין מרגישה שהיא זו שמחזיקה הכל..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>מה הכאב הגדול שמביא אותו אליכם?</label>
+          <textarea id="icp_pain" placeholder="הכאב שגורם לו לחפש פתרון — מה לא עובד, מה מתסכל, מה לא מסתדר..."></textarea>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>כמה זמן הוא כבר עם הבעיה הזו?</label>
+            <input type="text" id="icp_duration" placeholder="לדוגמה: שנתיים, מאז שגדל הצוות...">
+          </div>
+          <div class="field">
+            <label>מה הוא ניסה עד היום?</label>
+            <input type="text" id="icp_tried" placeholder="לדוגמה: יועץ, קורסים, שכר עובדים נוספים...">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>לאן הוא רוצה להגיע?
+            <span class="label-hint">הטרנספורמציה — איך נראית ההצלחה בשבילו</span>
+          </label>
+          <textarea class="short" id="icp_dream" placeholder="העסק שעובד גם בלעדיו... הכנסה X עם פחות שעות... מוניטין שמביא לקוחות בעצמו..."></textarea>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>מה הטריגר שגרם לו לחפש פתרון עכשיו?</label>
+            <input type="text" id="icp_trigger" placeholder="מה השתנה? מה קרה לאחרונה?">
+          </div>
+          <div class="field">
+            <label>מה עוצר אותו מלרכוש?</label>
+            <input type="text" id="icp_blockers" placeholder="חסמים, ספקות, פחדים...">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>איפה הוא מבלה אונליין?
+            <span class="label-hint">רשתות, קבוצות, ערוצי YouTube, גוגל</span>
+          </label>
+          <input type="text" id="icp_channels" placeholder="לדוגמה: אינסטגרם, קבוצות פייסבוק של יזמים, פודקאסטים עסקיים...">
+        </div>
+
+        <div class="field">
+          <label>באיזו שפה הוא מדבר על הבעיה שלו?
+            <span class="label-hint">מילים וביטויים ספציפיים שהוא משתמש בהם</span>
+          </label>
+          <textarea class="short" id="icp_language" placeholder='"שוקע", "לא מצליח לגדול", "עייף", "אין לי זמן", "אני הצוואר הבקבוק"...'></textarea>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Marketing -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-badge">2</div>
+        <div class="card-title">השיווק הקיים</div>
+      </div>
+      <div class="card-body">
+
+        <div class="field">
+          <label>סלוגן / תגית <span style="color:var(--text-dim)">(רשות)</span></label>
+          <input type="text" id="marketing_slogan" placeholder="הסלוגן הרשמי, תגית המותג, או המשפט שמופיע ב-Bio...">
+        </div>
+
+        <hr class="divider">
+
+        <div class="msub-title">אתר אינטרנט</div>
+        <div class="field">
+          <div class="url-row">
+            <input type="url" id="website_url" placeholder="https://" dir="ltr">
+            <button class="btn-fetch" onclick="fetchWebsite()">טען</button>
+          </div>
+          <div id="fetch_msg" class="fetch-msg hidden"></div>
+          <div id="website_manual_wrap" class="hidden" style="margin-top:0.6rem;">
+            <span class="paste-hint">האתר חסם טעינה — העתק/י את תוכן הדף ידנית (כותרות, טקסטים, הצעת ערך)</span>
+            <textarea id="website_manual" class="tall" placeholder="הדבק/י כאן תוכן מהאתר..."></textarea>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="msub-title">דף מכירה / דף נחיתה</div>
+        <div class="field">
+          <div class="url-row">
+            <input type="url" id="salespage_url" placeholder="https://" dir="ltr">
+            <button class="btn-fetch" onclick="fetchSalesPage()">טען</button>
+          </div>
+          <div id="salespage_fetch_msg" class="fetch-msg hidden"></div>
+          <div id="salespage_manual_wrap" class="hidden" style="margin-top:0.6rem;">
+            <span class="paste-hint">האתר חסם טעינה — הדבק/י את תוכן הדף ידנית</span>
+            <textarea id="salespage_manual" class="tall" placeholder="הדבק/י כאן תוכן מדף המכירה..."></textarea>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="msub-title">רשתות חברתיות</div>
+        <div class="field">
+          <label>אינסטגרם</label>
+          <span class="paste-hint">העתק/י Bio + 3-5 פוסטים אחרונים (כולל כיתובים)</span>
+          <textarea class="tall" id="marketing_instagram" placeholder="Bio:&#10;[טקסט ה-Bio]&#10;&#10;פוסט 1:&#10;[כיתוב]&#10;&#10;פוסט 2:&#10;[כיתוב]..."></textarea>
+        </div>
+        <div class="field">
+          <label>לינקדאין</label>
+          <span class="paste-hint">העתק/י תיאור החברה / פרופיל + פוסטים</span>
+          <textarea id="marketing_linkedin" placeholder="תיאור + פוסטים נבחרים..."></textarea>
+        </div>
+        <div class="field">
+          <label>פייסבוק</label>
+          <span class="paste-hint">העתק/י About של הדף + פוסטים אורגניים</span>
+          <textarea id="marketing_facebook" placeholder="About + פוסטים..."></textarea>
+        </div>
+
+        <hr class="divider">
+
+        <div class="msub-title">קמפיין פייסבוק / אינסטגרם <span style="color:var(--text-dim);font-weight:400;text-transform:none;letter-spacing:0;font-size:0.72rem">(רשות)</span></div>
+        <div class="field">
+          <label>דף פייסבוק — פתח ספריית מודעות</label>
+          <div class="url-row">
+            <input type="url" id="fb_page_url" placeholder="https://www.facebook.com/שם-הדף" dir="ltr">
+            <button class="btn-fetch" onclick="openFbAdsLibrary()">פתח</button>
+          </div>
+          <span class="paste-hint" style="margin-top:0.3rem;display:block">יפתח טאב עם המודעות הפעילות — העתיקי ידנית לתיבה למטה</span>
+        </div>
+        <div class="field">
+          <span class="paste-hint">הדבק/י טקסטי מודעות וכיתובי ספונסר</span>
+          <textarea id="marketing_campaign" placeholder="טקסטי קמפיין, מודעות..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>הערות לקמפיין <span style="color:var(--text-dim)">(רשות)</span>
+            <span class="label-hint">למי מכוון, מה המטרה, תקציב, מה חשוב לשים לב אליו</span>
+          </label>
+          <textarea class="short" id="marketing_context" placeholder='לדוגמה: "מכוון לנשים 35-50. מוביל לדף מכירה של אתגר ב-297 ש&quot;ח."'></textarea>
+        </div>
+
+        <hr class="divider">
+
+        <div class="field">
+          <label>נוסף — TikTok, ניוזלטר, SMS <span style="color:var(--text-dim)">(רשות)</span></label>
+          <textarea class="short" id="marketing_other" placeholder="כל תוכן שיווקי רלוונטי נוסף..."></textarea>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="analyze-wrap">
+      <button class="btn-analyze" id="analyzeBtn" onclick="analyze()">גלה את הפערים</button>
+    </div>
+
+  </div><!-- /form-section -->
+
+  <!-- Error -->
+  <div id="errorBox" class="error-box hidden"></div>
+
+  <!-- Loading -->
+  <div id="loading" class="hidden">
+    <div class="loading">
+      <div class="spinner"></div>
+      <div class="loading-label">עובדים על זה...</div>
+      <div style="font-size:0.8rem; color:var(--text-muted); margin-top:0.4rem;">מיד נגלה לך האם השיווק שלך פונה לקהל הנכון</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       RESULTS
+  ════════════════════════════════════ -->
+  <div id="results" class="hidden">
+
+    <!-- Audit header -->
+    <div class="audit-header">
+      <div class="audit-brand-block">
+        <div class="audit-brand">Mrs. Wolf</div>
+        <div class="audit-subtitle">Marketing Alignment Audit</div>
+      </div>
+      <div class="audit-meta">
+        <div class="audit-business" id="r-business-name"></div>
+        <div class="audit-date" id="r-date"></div>
+      </div>
+    </div>
+
+    <!-- ICP summary -->
+    <div class="result-icp">
+      <div class="result-icp-label">הלקוח האידיאלי — סיכום</div>
+      <div class="result-icp-text" id="r-icp-summary"></div>
+    </div>
+
+    <!-- Score -->
+    <div class="score-hero">
+      <div class="score-visual">
+        <svg class="score-svg" width="140" height="140" viewBox="0 0 140 140">
+          <circle class="score-track" cx="70" cy="70" r="58"
+            fill="none" stroke="#e8e8e8" stroke-width="8"/>
+          <circle class="score-ring" id="score-ring" cx="70" cy="70" r="58"
+            fill="none" stroke="#e85c52" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <div class="score-overlay">
+          <div class="score-num" id="r-score-num">0</div>
+          <div class="score-denom">/100</div>
+        </div>
+      </div>
+      <div class="score-label-text" id="r-score-label"></div>
+    </div>
+
+    <!-- Critical gap -->
+    <div class="critical-gap-block" id="r-critical-gap-block">
+      <div class="critical-gap-icon">!</div>
+      <div>
+        <div class="critical-gap-label">הפספוס הגדול</div>
+        <div class="critical-gap-text" id="r-critical-gap"></div>
+      </div>
+    </div>
+
+    <!-- Slogan analysis -->
+    <div class="slogan-block" id="r-slogan-block">
+      <div class="slogan-header">
+        <div class="slogan-header-label">ניתוח סלוגן</div>
+        <div class="slogan-score-badge" id="r-slogan-badge"></div>
+      </div>
+      <div class="slogan-body">
+        <div class="slogan-quote" id="r-slogan-quote"></div>
+        <div class="slogan-verdict" id="r-slogan-verdict"></div>
+        <div class="slogan-gap"><strong>מה חסר:</strong> <span id="r-slogan-gap"></span></div>
+      </div>
+    </div>
+
+    <!-- Dimensions -->
+    <div class="dimensions-block">
+      <div class="dimensions-header">ניתוח לפי ממד</div>
+      <div id="r-dimensions"></div>
+    </div>
+
+    <!-- Strengths + Gaps -->
+    <div class="two-col">
+      <div class="result-card strengths-card">
+        <div class="rc-header">מה עובד</div>
+        <ul class="rc-list" id="r-strengths"></ul>
+      </div>
+      <div class="result-card gaps-card">
+        <div class="rc-header">מה פספסנו</div>
+        <ul class="rc-list" id="r-gaps"></ul>
+      </div>
+    </div>
+
+    <!-- Language comparison -->
+    <div class="lang-compare-block" id="r-lang-compare-block">
+      <div class="lang-compare-header">מה הלקוח אומר מול מה השיווק אומר</div>
+      <table class="lang-compare-table">
+        <thead>
+          <tr>
+            <th>השיווק אומר</th>
+            <th>הלקוח אומר</th>
+          </tr>
+        </thead>
+        <tbody id="r-lang-compare-rows"></tbody>
+      </table>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="recs-block">
+      <div class="recs-label">3 המלצות מיידיות</div>
+      <div class="rec-list" id="r-recs"></div>
+    </div>
+
+    <!-- Back + Print -->
+    <div style="display:flex; gap:1rem; justify-content:center; padding-top:0.5rem;">
+      <button class="btn-print" onclick="resetForm()">ניתוח חדש</button>
+      <button class="btn-print" onclick="printSummary()">הדפס דף סיכום</button>
+    </div>
+
+  </div><!-- /results -->
+
+</div><!-- /container -->
+
+<!-- Summary print page — must be outside .container so print CSS can show it -->
+<div class="summary-page" id="summary-page">
+  <div class="sp-header">
+    <div>
+      <img src="logo.png" alt="Mrs. Wolf" class="sp-logo">
+      <div class="sp-business" id="sp-business"></div>
+    </div>
+    <div class="sp-date" id="sp-date"></div>
+  </div>
+  <div class="sp-score-row">
+    <div class="sp-score-circle">
+      <div class="sp-score-num" id="sp-score"></div>
+      <div class="sp-score-sub">/100</div>
+    </div>
+    <div class="sp-score-label" id="sp-score-label"></div>
+  </div>
+  <div class="sp-section-title">הלקוח האידיאלי</div>
+  <div class="sp-icp" id="sp-icp"></div>
+  <div class="sp-section-title">3 הפספוסים המרכזיים</div>
+  <ul class="sp-list sp-gaps" id="sp-gaps"></ul>
+  <div class="sp-section-title">3 המלצות מיידיות</div>
+  <ul class="sp-list sp-recs" id="sp-recs"></ul>
+  <div class="sp-footer">
+    <div class="sp-footer-brand">Mrs. Wolf</div>
+    <div class="sp-footer-tag">Making Business Better</div>
+  </div>
+</div>
+
+<script>
+  let websiteContent = '';
+  let salespageContent = '';
+
+  /* ── Utilities ── */
+
+  function scoreColor(s) {
+    if (s < 40) return 'var(--red)';
+    if (s < 60) return 'var(--orange)';
+    if (s < 75) return 'var(--yellow)';
+    return 'var(--green)';
+  }
+
+  function scoreClass(s) {
+    if (s < 40) return 'c-red';
+    if (s < 60) return 'c-orange';
+    if (s < 75) return 'c-yellow';
+    return 'c-green';
+  }
+
+  function scoreBgClass(s) {
+    if (s < 40) return 'bg-red';
+    if (s < 60) return 'bg-orange';
+    if (s < 75) return 'bg-yellow';
+    return 'bg-green';
+  }
+
+  function animateNumber(el, target, ms) {
+    const start = Date.now();
+    const tick = () => {
+      const p = Math.min((Date.now() - start) / ms, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(eased * target);
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  function animateRing(score) {
+    const ring = document.getElementById('score-ring');
+    const circumference = 364.42;
+    const offset = circumference - (score / 100) * circumference;
+    ring.style.stroke = scoreColor(score);
+    setTimeout(() => { ring.style.strokeDashoffset = offset; }, 50);
+  }
+
+  function formatDate() {
+    return new Date().toLocaleDateString('he-IL', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  /* ── Fetch website ── */
+
+  async function fetchWebsite() {
+    const url = document.getElementById('website_url').value.trim();
+    if (!url) return;
+    const msg = document.getElementById('fetch_msg');
+    msg.textContent = 'טוען...';
+    msg.className = 'fetch-msg';
+    msg.classList.remove('hidden');
+
+    try {
+      const res = await fetch('/api/fetch-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      });
+      const data = await res.json();
+      if (data.success) {
+        websiteContent = data.content;
+        msg.textContent = `נטען (${data.charCount.toLocaleString()} תווים)`;
+        msg.className = 'fetch-msg ok';
+      } else {
+        msg.textContent = data.isSocial ? 'רשת חברתית — הדבק ידנית בשדה המתאים' : data.message;
+        msg.className = 'fetch-msg err';
+        if (!data.isSocial) {
+          document.getElementById('website_manual_wrap').classList.remove('hidden');
+        }
+      }
+    } catch {
+      msg.textContent = 'שגיאה בטעינה';
+      msg.className = 'fetch-msg err';
+    }
+  }
+
+  /* ── Fetch Facebook ads ── */
+
+  function openFbAdsLibrary() {
+    const url = document.getElementById('fb_page_url').value.trim();
+    if (!url) return;
+    let name = url;
+    try {
+      const u = new URL(url.startsWith('http') ? url : 'https://' + url);
+      const idParam = u.searchParams.get('id');
+      name = idParam || u.pathname.split('/').filter(Boolean).pop() || url;
+    } catch {}
+    const libraryUrl = `https://www.facebook.com/ads/library/?q=${encodeURIComponent(name)}&search_type=keyword_unordered&active_status=active&ad_type=all&country=ALL`;
+    window.open(libraryUrl, '_blank');
+  }
+
+  async function fetchFbAds() {
+    const url = document.getElementById('fb_page_url').value.trim();
+    if (!url) return;
+    try {
+      const res = await fetch('/api/fetch-fb-ads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pageUrl: url })
+      });
+      const data = await res.json();
+      if (data.success && data.count > 0) {
+        document.getElementById('marketing_campaign').value = data.content;
+      }
+    } catch {}
+  }
+
+  /* ── Fetch sales page ── */
+
+  async function fetchSalesPage() {
+    const url = document.getElementById('salespage_url').value.trim();
+    if (!url) return;
+    const msg = document.getElementById('salespage_fetch_msg');
+    msg.textContent = 'טוען...';
+    msg.className = 'fetch-msg';
+    msg.classList.remove('hidden');
+    try {
+      const res = await fetch('/api/fetch-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      });
+      const data = await res.json();
+      if (data.success) {
+        salespageContent = data.content;
+        msg.textContent = `נטען (${data.charCount.toLocaleString()} תווים)`;
+        msg.className = 'fetch-msg ok';
+      } else {
+        msg.textContent = data.message;
+        msg.className = 'fetch-msg err';
+        document.getElementById('salespage_manual_wrap').classList.remove('hidden');
+      }
+    } catch {
+      msg.textContent = 'שגיאה בטעינה';
+      msg.className = 'fetch-msg err';
+    }
+  }
+
+  /* ── Analyze ── */
+
+  async function analyze() {
+    const icp = {
+      who: document.getElementById('icp_who').value,
+      pain: document.getElementById('icp_pain').value,
+      duration: document.getElementById('icp_duration').value,
+      tried: document.getElementById('icp_tried').value,
+      dream: document.getElementById('icp_dream').value,
+      trigger: document.getElementById('icp_trigger').value,
+      blockers: document.getElementById('icp_blockers').value,
+      channels: document.getElementById('icp_channels').value,
+      language: document.getElementById('icp_language').value,
+    };
+
+    const marketing = {
+      website_url: document.getElementById('website_url').value,
+      website_content: websiteContent || document.getElementById('website_manual').value,
+      slogan: document.getElementById('marketing_slogan').value,
+      instagram: document.getElementById('marketing_instagram').value,
+      linkedin: document.getElementById('marketing_linkedin').value,
+      facebook: document.getElementById('marketing_facebook').value,
+      campaign: document.getElementById('marketing_campaign').value,
+      other: document.getElementById('marketing_other').value,
+      context: document.getElementById('marketing_context').value,
+      salespage_url: document.getElementById('salespage_url').value,
+      salespage_content: salespageContent || document.getElementById('salespage_manual').value,
+    };
+
+    const businessName = document.getElementById('businessName').value;
+    const businessDomain = document.getElementById('businessDomain').value;
+
+    const hasICP = Object.values(icp).some(v => v.trim());
+    const hasMarketing = Object.values(marketing).some(v => v?.trim());
+
+    if (!hasICP) return showError('נא למלא לפחות חלק מנתוני הלקוח האידיאלי.');
+    if (!hasMarketing) return showError('נא להוסיף לפחות מקור שיווקי אחד לניתוח.');
+
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ icp, marketing, businessName, businessDomain })
+      });
+      const data = await res.json();
+      if (!data.success || data.error) throw new Error(data.error || 'שגיאה לא ידועה');
+      renderResults(data.analysis, businessName, businessDomain);
+    } catch (err) {
+      showError('שגיאה: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  /* ── Render results ── */
+
+  function renderResults(a, name, domain) {
+    // Audit header
+    document.getElementById('r-business-name').textContent = [name, domain].filter(Boolean).join(' — ') || 'לקוח לא מזוהה';
+    document.getElementById('r-date').textContent = formatDate();
+
+    // ICP summary
+    document.getElementById('r-icp-summary').textContent = a.icp_summary;
+
+    // Score
+    const scoreEl = document.getElementById('r-score-num');
+    scoreEl.className = 'score-num ' + scoreClass(a.overall_score);
+    animateNumber(scoreEl, a.overall_score, 1100);
+    animateRing(a.overall_score);
+    document.getElementById('r-score-label').textContent = a.overall_label;
+
+    // Critical gap
+    document.getElementById('r-critical-gap').textContent = a.critical_gap;
+
+    // Slogan
+    const sa = a.slogan_analysis;
+    if (sa && sa.verdict) {
+      const badge = document.getElementById('r-slogan-badge');
+      badge.textContent = sa.score + '/100';
+      badge.className = 'slogan-score-badge ' + scoreBgClass(sa.score);
+      badge.style.color = '#0a0a0a';
+      document.getElementById('r-slogan-quote').textContent =
+        sa.slogan_text && sa.slogan_text !== 'לא זוהה סלוגן' ? `"${sa.slogan_text}"` : '(סלוגן לא סופק)';
+      document.getElementById('r-slogan-verdict').textContent = sa.verdict;
+      document.getElementById('r-slogan-gap').textContent = sa.gap;
+      document.getElementById('r-slogan-block').classList.remove('hidden');
+    } else {
+      document.getElementById('r-slogan-block').classList.add('hidden');
+    }
+
+    // Dimensions
+    document.getElementById('r-dimensions').innerHTML = a.dimensions.map(d => `
+      <div class="dim-item">
+        <div class="dim-top">
+          <div class="dim-name">${d.name}</div>
+          <div class="dim-score-val ${scoreClass(d.score)}">${d.score}</div>
+        </div>
+        <div class="dim-bar-track">
+          <div class="dim-bar-fill" data-width="${d.score}" style="background:${scoreColor(d.score)}"></div>
+        </div>
+        <div class="dim-finding">${d.finding}</div>
+      </div>
+    `).join('');
+
+    // Animate bars after render
+    setTimeout(() => {
+      document.querySelectorAll('.dim-bar-fill').forEach(el => {
+        el.style.width = el.dataset.width + '%';
+      });
+    }, 100);
+
+    // Language comparison
+    const langBlock = document.getElementById('r-lang-compare-block');
+    if (a.language_comparison?.length) {
+      document.getElementById('r-lang-compare-rows').innerHTML =
+        a.language_comparison.map(r => `
+          <tr>
+            <td>${r.marketing_says || '—'}</td>
+            <td>${r.icp_says || '—'}</td>
+          </tr>
+        `).join('');
+      langBlock.classList.remove('hidden');
+    } else {
+      langBlock.classList.remove('hidden');
+      document.getElementById('r-lang-compare-rows').innerHTML =
+        `<tr><td colspan="2" style="text-align:center;color:var(--text-dim);font-size:0.8rem;padding:1rem">לא סופק מספיק תוכן להשוואת שפה</td></tr>`;
+    }
+
+    // Strengths
+    document.getElementById('r-strengths').innerHTML =
+      a.strengths.map(s => `<li>${s}</li>`).join('');
+
+    // Gaps
+    document.getElementById('r-gaps').innerHTML =
+      a.gaps.map(g => `<li>${g}</li>`).join('');
+
+    // Recommendations
+    document.getElementById('r-recs').innerHTML = a.recommendations.map((r, i) => `
+      <div class="rec-item">
+        <div class="rec-num">${i + 1}</div>
+        <div class="rec-content">
+          <div class="rec-title">${r.title}</div>
+          <div class="rec-action">${r.action}</div>
+        </div>
+      </div>
+    `).join('');
+
+    // Show results
+    document.getElementById('form-section').classList.add('hidden');
+    document.getElementById('results').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ── Helpers ── */
+
+  function setLoading(on) {
+    document.getElementById('analyzeBtn').disabled = on;
+    document.getElementById('loading').classList.toggle('hidden', !on);
+    document.getElementById('errorBox').classList.add('hidden');
+    if (on) document.getElementById('results').classList.add('hidden');
+  }
+
+  function showError(msg) {
+    const box = document.getElementById('errorBox');
+    box.textContent = msg;
+    box.classList.remove('hidden');
+    setLoading(false);
+  }
+
+  function printSummary() {
+    // populate summary page
+    const sp = id => document.getElementById(id);
+    sp('sp-business').textContent = sp('r-business-name').textContent;
+    sp('sp-date').textContent = sp('r-date').textContent;
+    sp('sp-score').textContent = sp('r-score-num').textContent;
+    sp('sp-score-label').textContent = sp('r-score-label').textContent;
+    sp('sp-icp').textContent = sp('r-icp-summary').textContent;
+    sp('sp-gaps').innerHTML = [...document.querySelectorAll('#r-gaps li')]
+      .map(li => `<li>${li.textContent}</li>`).join('');
+    sp('sp-recs').innerHTML = [...document.querySelectorAll('.rec-item')]
+      .map((el, i) => {
+        const title = el.querySelector('.rec-title')?.textContent || '';
+        const action = el.querySelector('.rec-action')?.textContent || '';
+        return `<li data-num="${i+1}"><span class="sp-rec-title">${title}</span> — <span class="sp-rec-action">${action}</span></li>`;
+      }).join('');
+    window.print();
+  }
+
+  function resetForm() {
+    document.getElementById('results').classList.add('hidden');
+    document.getElementById('form-section').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Allow Enter in URL field to trigger fetch
+  document.getElementById('website_url').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); fetchWebsite(); }
+  });
+</script>
+</body>
+</html>
