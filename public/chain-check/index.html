@@ -687,11 +687,9 @@
     <div class="header-tag">Chain Check</div>
   </header>
 
-  <div class="intro-title">בדיקת השרשרת</div>
+  <div class="intro-title" style="color:var(--gold)">אבחון מסע הלקוח שלך</div>
   <p class="intro-sub">
-    שיווק וגילוי, מעמד המכירה, חוויה ורגעי וואלה, שגרירים וצמיחה.<br>
-    אחד מהם מעכב את הצמיחה שלך.<br>
-    20 שאלות כדי לגלות מה, ומה עושים עם זה.
+    מהי החוליה בשרשרת שמעכבת צמיחה בעסק שלך
   </p>
   <div class="intro-stats">
     <div class="stat-item">
@@ -828,10 +826,37 @@
 
 <!-- ═══════════════ LOADING ═══════════════ -->
 <div class="container hidden" id="screen-loading">
-  <div class="loading-wrap">
-    <div class="spinner"></div>
-    <div class="loading-label">מנתחת את השרשרת...</div>
-    <div class="loading-sub">מיד נגלה לך מה מעכב את הצמיחה</div>
+  <header class="site-header">
+    <img src="../logo.png" alt="Mrs. Wolf" class="header-logo">
+    <div class="header-tag">Chain Check</div>
+  </header>
+
+  <div style="text-align:center;margin-bottom:2rem">
+    <div class="spinner" style="margin:0 auto 1.25rem"></div>
+    <div class="loading-label">מעבדים את התשובות שלך...</div>
+    <div class="loading-sub">לרוב לוקח בין 10 ל-20 שניות</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">בינתיים — לאן לשלוח את הסיכום?</div>
+    </div>
+    <div class="card-body">
+      <div class="grid-2">
+        <div class="field">
+          <label for="c-email">מייל</label>
+          <input type="email" id="c-email" placeholder="your@email.com" dir="ltr">
+        </div>
+        <div class="field">
+          <label for="c-phone">טלפון <span style="color:var(--text-dim)">(רשות)</span></label>
+          <input type="tel" id="c-phone" placeholder="050-..." dir="ltr">
+        </div>
+      </div>
+      <label class="call-checkbox">
+        <input type="checkbox" id="c-call">
+        <span>אשמח לשיחה עם דניאל ונועה</span>
+      </label>
+    </div>
   </div>
 </div>
 
@@ -876,40 +901,16 @@
   <div class="recs-label">3 דברים לעשות עכשיו</div>
   <div class="rec-list" id="r-recs"></div>
 
-  <!-- Contact + PDF -->
-  <div id="r-contact-section" class="no-pdf">
-    <div class="recs-label">קבלי את הסיכום שלך</div>
-    <div class="contact-collect-block">
-      <p class="contact-collect-desc">הכניסי מייל וטלפון — הסיכום יישלח אלינו ותורידי PDF לעצמך.</p>
-      <div class="grid-2">
-        <div class="field">
-          <label for="c-email">מייל <span style="color:var(--red)">*</span></label>
-          <input type="email" id="c-email" placeholder="your@email.com" dir="ltr">
-        </div>
-        <div class="field">
-          <label for="c-phone">טלפון <span style="color:var(--text-dim)">(רשות)</span></label>
-          <input type="tel" id="c-phone" placeholder="050-..." dir="ltr">
-        </div>
-      </div>
-      <label class="call-checkbox">
-        <input type="checkbox" id="c-call">
-        <span>מעוניין/ת בשיחה אישית עם Mrs. Wolf</span>
-      </label>
-      <div>
-        <button class="btn-primary" onclick="submitContact()" id="btn-submit-contact">קבל סיכום ב-PDF</button>
-        <div id="c-error" class="error-msg hidden"></div>
-      </div>
-    </div>
-  </div>
-  <div id="r-contact-success" class="contact-success hidden no-pdf" style="margin-bottom:1.25rem">הסיכום נשלח אלינו. ה-PDF בדרך אלייך...</div>
-
   <div class="cta-block">
     <div class="cta-title">רוצה לפרק את זה ביחד?</div>
     <div class="cta-sub">
       Mrs. Wolf בונה מסע לקוח שלם לעסקים.<br>
       שיווק שמביא, מכירות שסוגרות, תפעול שמייצר שגרירים.
     </div>
-    <a href="https://mrs-wolf.com/" target="_blank" class="btn-cta">קבעו שיחה</a>
+    <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap">
+      <a href="https://mrs-wolf.com/" target="_blank" class="btn-cta">קבעו שיחה</a>
+      <button class="btn-cta no-pdf" style="background:transparent;border:2px solid var(--gold);color:var(--gold);cursor:pointer;font-family:inherit" onclick="generatePDF(lastResults?.businessInfo?.name)">הורד PDF</button>
+    </div>
   </div>
 
   <div class="no-pdf" style="text-align:center">
@@ -1214,6 +1215,7 @@ function startQuiz() {
 function renderSection(idx) {
   currentSection = idx;
   const section = SECTIONS[idx];
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 
   document.getElementById('progress-steps').innerHTML = SECTIONS.map((s, i) => `
     <div class="progress-step ${i === idx ? 'active' : i < idx ? 'done' : ''}">${s.title}</div>
@@ -1327,6 +1329,21 @@ async function submitQuiz() {
       touchpoints,
       textAnswers: { ...textAnswers }
     };
+
+    const contactEmail = document.getElementById('c-email').value.trim();
+    if (contactEmail) {
+      const contactInfo = {
+        email: contactEmail,
+        phone: document.getElementById('c-phone').value.trim(),
+        wantsCall: document.getElementById('c-call').checked
+      };
+      fetch('/api/send-summary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contactInfo, ...lastResults })
+      }).catch(e => console.warn('Email send failed:', e));
+    }
+
     renderResults(data.scores, data.analysis, businessInfo.name);
   } catch (err) {
     showScreen('screen-quiz');
@@ -1421,45 +1438,7 @@ function renderResults(scores, analysis, bizName) {
   `).join('');
 }
 
-/* ── Contact + PDF ── */
-
-async function submitContact() {
-  const email = document.getElementById('c-email').value.trim();
-  const errEl = document.getElementById('c-error');
-
-  if (!email || !email.includes('@')) {
-    errEl.textContent = 'נא להזין כתובת מייל תקינה.';
-    errEl.classList.remove('hidden');
-    return;
-  }
-
-  errEl.classList.add('hidden');
-  const btn = document.getElementById('btn-submit-contact');
-  btn.disabled = true;
-  btn.textContent = 'מייצר PDF...';
-
-  const contactInfo = {
-    email,
-    phone: document.getElementById('c-phone').value.trim(),
-    wantsCall: document.getElementById('c-call').checked
-  };
-
-  // Fire email to server (don't block on it)
-  if (lastResults) {
-    fetch('/api/send-summary', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contactInfo, ...lastResults })
-    }).catch(e => console.warn('Email send failed:', e));
-  }
-
-  // Generate PDF
-  await generatePDF(lastResults?.businessInfo?.name);
-
-  // Show success
-  document.getElementById('r-contact-section').classList.add('hidden');
-  document.getElementById('r-contact-success').classList.remove('hidden');
-}
+/* ── PDF ── */
 
 async function generatePDF(bizName) {
   const el = document.getElementById('screen-results');
@@ -1488,16 +1467,9 @@ function restartQuiz() {
   document.getElementById('fetch-status').className = 'fetch-status hidden';
   document.getElementById('fetch-status').textContent = '';
   document.querySelectorAll('.chip.selected').forEach(c => c.classList.remove('selected'));
-  // reset contact form
   document.getElementById('c-email').value = '';
   document.getElementById('c-phone').value = '';
   document.getElementById('c-call').checked = false;
-  document.getElementById('c-error').classList.add('hidden');
-  document.getElementById('r-contact-section').classList.remove('hidden');
-  document.getElementById('r-contact-success').classList.add('hidden');
-  const btn = document.getElementById('btn-submit-contact');
-  btn.disabled = false;
-  btn.textContent = 'קבל סיכום ב-PDF';
   showScreen('screen-intro');
 }
 </script>
