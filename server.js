@@ -3,6 +3,9 @@ const express = require('express');
 const Anthropic = require('@anthropic-ai/sdk');
 const path = require('path');
 const fs = require('fs');
+const { Resend } = require('resend');
+
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 const SESSIONS_DIR = path.join(__dirname, 'sessions');
 if (!fs.existsSync(SESSIONS_DIR)) fs.mkdirSync(SESSIONS_DIR);
@@ -270,6 +273,66 @@ ${buildMarketingText(marketing)}
       console.log(`[session saved] ${filename}`);
     } catch (saveErr) {
       console.error('[session save error]', saveErr.message);
+    }
+
+    // Send email notification
+    if (resend) {
+      try {
+        const dims = (analysis.dimensions || []).map(d =>
+          `<tr><td style="padding:4px 8px;border-bottom:1px solid #eee">${d.name}</td><td style="padding:4px 8px;border-bottom:1px solid #eee;font-weight:700;color:${d.score>=70?'#3a9458':d.score>=50?'#b89e10':'#d94444'}">${d.score}</td><td style="padding:4px 8px;border-bottom:1px solid #eee;color:#555;font-size:13px">${d.finding}</td></tr>`
+        ).join('');
+
+        const recs = (analysis.recommendations || []).map((r, i) =>
+          `<p style="margin:6px 0"><strong>${i+1}. ${r.title}</strong><br><span style="color:#555">${r.action}</span></p>`
+        ).join('');
+
+        const icpLines = Object.entries(icp).filter(([,v]) => v?.trim()).map(([k,v]) => {
+          const labels = { who:'מי הוא', pain:'הכאב', duration:'משך', tried:'ניסה', dream:'חלום', trigger:'טריגר', blockers:'חסמים', channels:'ערוצים', language:'שפה' };
+          return `<p style="margin:4px 0"><strong>${labels[k]||k}:</strong> ${v}</p>`;
+        }).join('');
+
+        await resend.emails.send({
+          from: 'Mrs. Wolf <onboarding@resend.dev>',
+          to: 'noa@noadoron.co.il',
+          subject: `ניתוח ICP — ${businessName || 'לקוח'} | ציון ${analysis.overall_score || ''}`,
+          html: `
+            <div dir="rtl" style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;color:#1a1a1a">
+              <div style="background:#e85c52;padding:16px 24px;border-radius:8px 8px 0 0">
+                <h2 style="margin:0;color:#fff;font-size:18px">Mrs. Wolf — ניתוח ICP חדש</h2>
+              </div>
+              <div style="padding:24px;border:1px solid #eee;border-top:none;border-radius:0 0 8px 8px">
+                <h3 style="margin:0 0 4px;font-size:20px">${businessName || ''}</h3>
+                <p style="margin:0 0 20px;color:#888">${businessDomain || ''}</p>
+
+                <div style="background:#f7f7f7;border-radius:8px;padding:16px;margin-bottom:20px">
+                  <p style="margin:0 0 6px;font-size:12px;color:#888;text-transform:uppercase;letter-spacing:1px">ציון כולל</p>
+                  <p style="margin:0;font-size:28px;font-weight:800;color:#e85c52">${analysis.overall_score || ''}</p>
+                  <p style="margin:4px 0 0;color:#555">${analysis.overall_label || ''}</p>
+                </div>
+
+                <p style="font-size:12px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">סיכום הלקוח האידיאלי</p>
+                <p style="background:#f7f7f7;padding:12px;border-radius:6px;margin:0 0 20px">${analysis.icp_summary || ''}</p>
+
+                <p style="font-size:12px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">פספוס מרכזי</p>
+                <p style="background:#fff3f3;border-right:3px solid #e85c52;padding:12px;border-radius:0 6px 6px 0;margin:0 0 20px">${analysis.critical_gap || ''}</p>
+
+                <p style="font-size:12px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">ממדים</p>
+                <table style="width:100%;border-collapse:collapse;margin-bottom:20px;font-size:14px">${dims}</table>
+
+                <p style="font-size:12px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">המלצות</p>
+                ${recs}
+
+                <hr style="border:none;border-top:1px solid #eee;margin:24px 0">
+                <p style="font-size:12px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">נתוני הלקוח האידיאלי שהוזנו</p>
+                <div style="background:#f7f7f7;padding:12px;border-radius:6px;font-size:13px">${icpLines}</div>
+              </div>
+            </div>
+          `
+        });
+        console.log('[email sent]', businessName);
+      } catch (emailErr) {
+        console.error('[email error]', emailErr.message);
+      }
     }
   } catch (err) {
     console.error('[analyze error]', err.message);
