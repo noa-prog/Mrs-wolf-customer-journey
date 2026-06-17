@@ -143,7 +143,8 @@ app.post('/api/analyze', async (req, res) => {
 5. ציונים אמיתיים — לא אינפלציה. 50 זה 50, לא 75.
 6. אל תשתמש במונח ICP בשום מקום בתשובה — השתמש תמיד ב"לקוח האידיאלי" או "הלקוח".
 7. שים לב לסוג החומר השיווקי: אתר תדמית נמדד אחרת מדף מכירה ספציפי. אתר תדמית אמור לשדר זהות ובידול — לא בהכרח לפנות לכאב ספציפי. דף מכירה נמדד על יכולתו לדבר ישירות לכאב ולטריגר של הלקוח האידיאלי. אם לא צוין סוג — נסה להסיק מהתוכן ותציין זאת בניתוח.
-8. בממצא של כל ממד — צטט מילה או משפט קצר ספציפי מהחומר כדוגמה (בגרשיים).`;
+8. בממצא של כל ממד — צטט מילה או משפט קצר ספציפי מהחומר כדוגמה (בגרשיים).
+9. CRITICAL — JSON only: Return ONLY the raw JSON object with no markdown, no code fences, no text before or after. Inside string values, NEVER use double-quote characters ("). If you need to quote a word, use Hebrew gershayim (״) instead of (").`;
 
   const userPrompt = `## עסק: ${businessName || 'לא צוין'} | תחום: ${businessDomain || 'לא צוין'}
 
@@ -242,15 +243,29 @@ ${buildMarketingText(marketing)}
     });
 
     const raw = msg.content[0].text;
-    const match = raw.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error('לא נמצא JSON בתשובה');
+    // Strip markdown code fences if Claude wrapped the response
+    const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
+    const match = cleaned.match(/\{[\s\S]*\}/);
+    if (!match) {
+      console.error('[No JSON found] Raw:', raw.substring(0, 300));
+      throw new Error('לא נמצא JSON בתשובה');
+    }
     let analysis;
     try {
       analysis = JSON.parse(match[0]);
     } catch (parseErr) {
       console.error('[JSON parse error]', parseErr.message);
-      console.error('[Raw response]', raw.substring(0, 500));
-      throw new Error('שגיאה בפענוח התשובה — נסי שוב עם פחות תוכן שיווקי');
+      console.error('[Raw response]', raw.substring(0, 800));
+      // Attempt to fix unescaped double-quotes inside JSON string values
+      try {
+        const fixed = match[0].replace(/"([^"]*)":/g, (m) => m).replace(/:\s*"((?:[^"\\]|\\.)*)"/g, (m, p1) => {
+          const safeVal = p1.replace(/(?<!\\)"/g, '״');
+          return `: "${safeVal}"`;
+        });
+        analysis = JSON.parse(fixed);
+      } catch (fixErr) {
+        throw new Error('שגיאה בפענוח התשובה — נסי שוב');
+      }
     }
     res.json({ success: true, analysis });
 
